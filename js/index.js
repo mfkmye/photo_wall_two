@@ -4,7 +4,7 @@ window.onload = function () {
     var deg = 360 / len;
     for (var i = 0; i < len; i++) {
         img.eq(i).css({
-            transform: 'rotateY(' + deg * i + 'deg) translateZ(300px)',
+            transform: 'rotateY(' + deg * i + 'deg) translateZ(350px)',
             transition: 'transform 0.5s linear ' + (len - 1 - i) * 0.1 + 's',
         });
     }
@@ -17,9 +17,9 @@ function bindEvent() {
         roY = 0,
         oldX = 0,
         oldY = 0,
-        timer,
-        index = 0;
+        timer;
     $('body').on('mousedown', function (e) {
+        if (e.button != 0) return false;
         clearInterval(timer);
         startX = e.clientX;
         startY = e.clientY;
@@ -34,11 +34,12 @@ function bindEvent() {
                 transform: 'rotateX(' + roX + 'deg) rotateY(' + roY + 'deg)'
             });
         });
-        $('body').on('mouseup', function (e) {
-            console.log('mouseup');
+        $('body').on('mouseup mouseleave', function (e) {
+            $('body').off('mousemove');
+            $('body').off('mouseleave');
+            $('body').off('mouseup');
             oldX = roX;
             oldY = roY;
-            $('body').off('mousemove');
             var dx = oldX * (20 / 1000);
             var dy = oldY * (20 / 1000);
             timer = setInterval(function () {
@@ -51,7 +52,6 @@ function bindEvent() {
                     clearInterval(timer);
                 }
             }, 20);
-            $('body').off('mouseup');
         });
         return false;
     });
